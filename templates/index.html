@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinterest Video İndirici</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+            border-left: 4px solid #c33;
+        }
+
+        .success {
+            background: #efe;
+            color: #363;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+            border-left: 4px solid #363;
+        }
+
+        .video-preview {
+            margin-top: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .video-preview video {
+            width: 100%;
+            max-height: 300px;
+            display: block;
+        }
+
+        .download-btn {
+            margin-top: 15px;
+            background: #28a745;
+        }
+
+        .download-btn:hover {
+            background: #218838;
+        }
+
+        .example {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📌 Pinterest Video İndirici</h1>
+        <p class="subtitle">Pinterest'ten video indirmek artık çok kolay!</p>
+
+        <div class="input-group">
+            <label for="pinterest-url">Pinterest Video Linki</label>
+            <input type="text" id="pinterest-url" placeholder="https://www.pinterest.com/pin/..." />
+            <div class="example">Örnek: https://www.pinterest.com/pin/123456789/</div>
+        </div>
+
+        <button class="btn" id="download-btn" onclick="getVideo()">Video Bul</button>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p style="margin-top: 10px; color: #666;">Video aranıyor...</p>
+        </div>
+
+        <div class="error" id="error"></div>
+        <div class="success" id="success"></div>
+
+        <div class="result" id="result">
+            <div class="video-preview" id="video-preview"></div>
+            <a class="btn download-btn" id="download-link" download="pinterest-video.mp4">
+                ⬇️ Videoyu İndir
+            </a>
+        </div>
+    </div>
+
+    <script>
+        async function getVideo() {
+            const url = document.getElementById('pinterest-url').value.trim();
+            const btn = document.getElementById('download-btn');
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const success = document.getElementById('success');
+            const result = document.getElementById('result');
+
+            // Temizle
+            error.style.display = 'none';
+            success.style.display = 'none';
+            result.style.display = 'none';
+
+            if (!url) {
+                showError('Lütfen bir Pinterest linki giriniz!');
+                return;
+            }
+
+            if (!url.includes('pinterest')) {
+                showError('Lütfen geçerli bir Pinterest linki giriniz!');
+                return;
+            }
+
+            // Loading göster
+            btn.disabled = true;
+            loading.style.display = 'block';
+
+            try {
+                const response = await fetch('/download/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ url: url })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showSuccess('Video bulundu!');
+                    displayVideo(data.video_url);
+                } else {
+                    showError(data.error || 'Video bulunamadı');
+                }
+            } catch (err) {
+                showError('Bir hata oluştu: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+
+        function displayVideo(videoUrl) {
+            const preview = document.getElementById('video-preview');
+            const result = document.getElementById('result');
+            const downloadLink = document.getElementById('download-link');
+
+            preview.innerHTML = `
+                <video controls>
+                    <source src="${videoUrl}" type="video/mp4">
+                    Tarayıcınız video etiketini desteklemiyor.
+                </video>
+            `;
+
+            downloadLink.href = videoUrl;
+            result.style.display = 'block';
+        }
+
+        function showError(message) {
+            const error = document.getElementById('error');
+            error.textContent = message;
+            error.style.display = 'block';
+        }
+
+        function showSuccess(message) {
+            const success = document.getElementById('success');
+            success.textContent = message;
+            success.style.display = 'block';
+        }
+
+        // Enter tuşuyla da çalışsın
+        document.getElementById('pinterest-url').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                getVideo();
+            }
+        });
+    </script>
+</body>
+</html>
