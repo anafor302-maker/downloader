@@ -2,9 +2,10 @@
 import requests
 import re
 from django.shortcuts import render
-from django.http import JsonResponse, FileResponse
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from urllib.parse import urlparse, unquote
 
 def index(request):
     """Ana sayfa"""
@@ -25,28 +26,66 @@ def download_video(request):
                     'error': 'Geçerli bir Pinterest linki giriniz'
                 })
             
+            # pin.it linklerini pinterest.com'a çevir
+            if 'pin.it' in pinterest_url:
+                # pin.it kısaltma kodunu al
+                pin_code = pinterest_url.split('/')[-1].split('?')[0]
+                # Doğrudan pinterest.com linkine çevir
+                pinterest_url = f'https://www.pinterest.com/pin/{pin_code}/'
+            
             # Pinterest sayfasını çek
             headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
                 'Accept-Language': 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'DNT': '1',
+                'Connection': 'keep-alive',
+                'Upgrade-Insecure-Requests': '1',
+                'Sec-Fetch-Dest': 'document',
+                'Sec-Fetch-Mode': 'navigate',
+                'Sec-Fetch-Site': 'none',
+                'Cache-Control': 'max-age=0',
             }
             
-            # pin.it linklerini takip et (redirect)
-            response = requests.get(pinterest_url, headers=headers, allow_redirects=True)
+            # Timeout ekle ve redirectleri takip et
+            try:
+                response = requests.get(
+                    pinterest_url, 
+                    headers=headers, 
+                    allow_redirects=True,
+                    timeout=15,
+                    verify=True
+                )
+            except requests.exceptions.ProxyError:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'PythonAnywhere ücretsiz hesabında Pinterest\'e erişim kısıtlı. Lütfen ücretli hesaba geçin veya başka bir hosting kullanın.'
+                })
+            except requests.exceptions.SSLError:
+                # SSL hatası varsa verify=False ile dene
+                response = requests.get(
+                    pinterest_url, 
+                    headers=headers, 
+                    allow_redirects=True,
+                    timeout=15,
+                    verify=False
+                )
             
             if response.status_code != 200:
                 return JsonResponse({
                     'success': False,
-                    'error': 'Pinterest sayfası yüklenemedi'
+                    'error': f'Pinterest sayfası yüklenemedi (HTTP {response.status_code})'
                 })
+            
+            html_content = response.text
             
             # Video URL'sini bul
             video_url = None
             
             # Method 1: JSON-LD yapısından video URL'sini çek
             json_ld_pattern = r'<script type="application/ld\+json">(.*?)</script>'
-            json_matches = re.findall(json_ld_pattern, response.text, re.DOTALL)
+            json_matches = re.findall(json_ld_pattern, html_content, re.DOTALL)
             
             for json_str in json_matches:
                 try:
@@ -57,20 +96,35 @@ def download_video(request):
                     elif isinstance(json_data, dict) and 'video' in json_data:
                         if isinstance(json_data['video'], dict):
                             video_url = json_data['video'].get('contentUrl')
-                            break
+                            if video_url:
+                                break
                 except:
                     continue
             
-            # Method 2: Direkt video URL'sini ara
+            # Method 2: __PWS_DATA__ içinden video bilgisini çek
+            if not video_url:
+                pws_pattern = r'__PWS_DATA__\s*=\s*({.*?});'
+                pws_match = re.search(pws_pattern, html_content, re.DOTALL)
+                if pws_match:
+                    try:
+                        pws_data = json.loads(pws_match.group(1))
+                        # PWS data içinde video URL'sini ara
+                        video_url = find_video_in_dict(pws_data)
+                    except:
+                        pass
+            
+            # Method 3: Direkt video URL pattern'lerini ara
             if not video_url:
                 video_patterns = [
-                    r'"contentUrl":"(https://[^"]+\.mp4[^"]*)"',
-                    r'"url":"(https://v\d*\.pinimg\.com/videos/[^"]+\.mp4)"',
+                    r'"contentUrl"\s*:\s*"(https://[^"]+\.mp4[^"]*)"',
+                    r'"url"\s*:\s*"(https://v\d*\.pinimg\.com/videos/[^"]+\.mp4)"',
                     r'(https://v\d*\.pinimg\.com/videos/[^"]+\.mp4)',
+                    r'"video_url"\s*:\s*"(https://[^"]+\.mp4[^"]*)"',
+                    r'src="(https://v\d*\.pinimg\.com/videos/[^"]+\.mp4)"',
                 ]
                 
                 for pattern in video_patterns:
-                    matches = re.findall(pattern, response.text)
+                    matches = re.findall(pattern, html_content)
                     if matches:
                         video_url = matches[0]
                         break
@@ -78,24 +132,75 @@ def download_video(request):
             if not video_url:
                 return JsonResponse({
                     'success': False,
-                    'error': 'Video bulunamadı. Link bir video içermiyor olabilir.'
+                    'error': 'Video bulunamadı. Link bir video içermiyor olabilir veya Pinterest yapısı değişmiş olabilir.'
                 })
             
             # URL'deki escape karakterlerini temizle
-            video_url = video_url.replace('\\u002F', '/')
+            video_url = video_url.replace('\\u002F', '/').replace('\\/', '/')
+            video_url = unquote(video_url)
+            
+            # Video URL'sinin geçerli olup olmadığını kontrol et
+            if not video_url.startswith('http'):
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Geçersiz video URL\'si bulundu'
+                })
             
             return JsonResponse({
                 'success': True,
                 'video_url': video_url
             })
             
+        except requests.exceptions.Timeout:
+            return JsonResponse({
+                'success': False,
+                'error': 'İstek zaman aşımına uğradı. Lütfen tekrar deneyin.'
+            })
+        except requests.exceptions.ConnectionError:
+            return JsonResponse({
+                'success': False,
+                'error': 'Bağlantı hatası. İnternet bağlantınızı kontrol edin.'
+            })
+        except requests.exceptions.RequestException as e:
+            return JsonResponse({
+                'success': False,
+                'error': f'İstek hatası: {str(e)}'
+            })
         except Exception as e:
             return JsonResponse({
                 'success': False,
-                'error': f'Bir hata oluştu: {str(e)}'
+                'error': f'Beklenmeyen bir hata oluştu: {str(e)}'
             })
     
     return JsonResponse({
         'success': False,
         'error': 'Geçersiz istek'
     })
+
+
+def find_video_in_dict(data, depth=0, max_depth=10):
+    """Nested dictionary içinde video URL'sini bul"""
+    if depth > max_depth:
+        return None
+    
+    if isinstance(data, dict):
+        # Video URL anahtarlarını kontrol et
+        for key in ['contentUrl', 'video_url', 'url', 'src']:
+            if key in data:
+                value = data[key]
+                if isinstance(value, str) and '.mp4' in value and value.startswith('http'):
+                    return value
+        
+        # Recursive olarak tüm değerleri kontrol et
+        for value in data.values():
+            result = find_video_in_dict(value, depth + 1, max_depth)
+            if result:
+                return result
+    
+    elif isinstance(data, list):
+        for item in data:
+            result = find_video_in_dict(item, depth + 1, max_depth)
+            if result:
+                return result
+    
+    return None
