@@ -26,12 +26,23 @@ def download_video(request):
                     'error': 'Geçerli bir Pinterest linki giriniz'
                 })
             
-            # pin.it linklerini pinterest.com'a çevir
+            # pin.it linklerini takip et
             if 'pin.it' in pinterest_url:
-                # pin.it kısaltma kodunu al
-                pin_code = pinterest_url.split('/')[-1].split('?')[0]
-                # Doğrudan pinterest.com linkine çevir
-                pinterest_url = f'https://www.pinterest.com/pin/{pin_code}/'
+                try:
+                    # Redirect'i takip et
+                    redirect_response = requests.get(
+                        pinterest_url, 
+                        headers=headers, 
+                        allow_redirects=True,
+                        timeout=15
+                    )
+                    pinterest_url = redirect_response.url
+                    print(f"Redirect edildi: {pinterest_url}")
+                except Exception as e:
+                    print(f"Redirect hatası: {e}")
+                    # Fallback: URL'den pin kodunu çıkar
+                    pin_code = pinterest_url.split('/')[-1].split('?')[0]
+                    pinterest_url = f'https://www.pinterest.com/pin/{pin_code}/'
             
             # Pinterest sayfasını çek
             headers = {
@@ -80,6 +91,10 @@ def download_video(request):
             
             html_content = response.text
             
+            # Debug için
+            print(f"Final URL: {response.url}")
+            print(f"Status Code: {response.status_code}")
+            
             # Video URL'sini bul
             video_url = None
             
@@ -113,23 +128,56 @@ def download_video(request):
                     except:
                         pass
             
-            # Method 3: Direkt video URL pattern'lerini ara
+            # Method 3: Direkt video URL pattern'lerini ara (GENİŞLETİLMİŞ)
             if not video_url:
                 video_patterns = [
-                    r'"contentUrl"\s*:\s*"(https://[^"]+\.mp4[^"]*)"',
+                    # V1 video URL'leri
+                    r'"contentUrl"\s*:\s*"(https://v1\.pinimg\.com/videos/[^"]+\.mp4[^"]*)"',
+                    r'"url"\s*:\s*"(https://v1\.pinimg\.com/videos/[^"]+\.mp4)"',
+                    r'(https://v1\.pinimg\.com/videos/[^"]+\.mp4)',
+                    
+                    # V2 video URL'leri
+                    r'"contentUrl"\s*:\s*"(https://v2\.pinimg\.com/videos/[^"]+\.mp4[^"]*)"',
+                    r'"url"\s*:\s*"(https://v2\.pinimg\.com/videos/[^"]+\.mp4)"',
+                    r'(https://v2\.pinimg\.com/videos/[^"]+\.mp4)',
+                    
+                    # Genel pinimg video pattern'leri
+                    r'"contentUrl"\s*:\s*"(https://[^"]*pinimg\.com/videos/[^"]+\.mp4[^"]*)"',
                     r'"url"\s*:\s*"(https://v\d*\.pinimg\.com/videos/[^"]+\.mp4)"',
                     r'(https://v\d*\.pinimg\.com/videos/[^"]+\.mp4)',
                     r'"video_url"\s*:\s*"(https://[^"]+\.mp4[^"]*)"',
                     r'src="(https://v\d*\.pinimg\.com/videos/[^"]+\.mp4)"',
+                    
+                    # videos_720p veya diğer kalite seçenekleri
+                    r'"url_720p"\s*:\s*"(https://[^"]+\.mp4[^"]*)"',
+                    r'"url_hls"\s*:\s*"(https://[^"]+\.m3u8[^"]*)"',
+                    
+                    # Herhangi bir .mp4 dosyası
+                    r'(https://[^"\s]+\.mp4)',
                 ]
                 
                 for pattern in video_patterns:
                     matches = re.findall(pattern, html_content)
                     if matches:
                         video_url = matches[0]
+                        print(f"Video bulundu (Pattern): {video_url}")
                         break
             
             if not video_url:
+                # Debug: HTML'in bir kısmını logla
+                print("HTML içeriği (ilk 2000 karakter):")
+                print(html_content[:2000])
+                print("\n=== VIDEO ARANIMI ===")
+                
+                # .mp4 varlığını kontrol et
+                if '.mp4' in html_content:
+                    print("HTML'de .mp4 bulundu!")
+                    # Tüm .mp4 linklerini bul
+                    all_mp4s = re.findall(r'(https://[^\s"<>]+\.mp4[^\s"<>]*)', html_content)
+                    print(f"Bulunan tüm .mp4 linkleri: {all_mp4s[:5]}")  # İlk 5'ini göster
+                else:
+                    print("HTML'de .mp4 bulunamadı - Bu link bir resim olabilir")
+                
                 return JsonResponse({
                     'success': False,
                     'error': 'Video bulunamadı. Link bir video içermiyor olabilir veya Pinterest yapısı değişmiş olabilir.'

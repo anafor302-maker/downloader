@@ -325,7 +325,7 @@
 
     <script>
         async function getVideo() {
-            const url = document.getElementById('pinterest-url').value.trim();
+            let url = document.getElementById('pinterest-url').value.trim();
             const btn = document.getElementById('download-btn');
             const loading = document.getElementById('loading');
             const error = document.getElementById('error');
@@ -352,6 +352,20 @@
             loading.style.display = 'block';
 
             try {
+                // pin.it linkini çöz (client-side redirect takibi)
+                if (url.includes('pin.it')) {
+                    try {
+                        // Iframe ile redirect'i takip et
+                        const resolvedUrl = await resolvePinItUrl(url);
+                        if (resolvedUrl) {
+                            url = resolvedUrl;
+                            console.log('Çözümlenen URL:', url);
+                        }
+                    } catch (e) {
+                        console.log('pin.it çözümlenemedi, orijinal URL kullanılıyor:', e);
+                    }
+                }
+
                 const response = await fetch('/download/', {
                     method: 'POST',
                     headers: {
@@ -374,6 +388,42 @@
                 btn.disabled = false;
                 loading.style.display = 'none';
             }
+        }
+
+        // pin.it URL'lerini çöz
+        async function resolvePinItUrl(shortUrl) {
+            return new Promise((resolve, reject) => {
+                // CORS proxy kullan
+                const proxyUrl = 'https://api.allorigins.win/raw?url=';
+                
+                fetch(proxyUrl + encodeURIComponent(shortUrl))
+                    .then(response => {
+                        // Response URL'sinden gerçek Pinterest linkini al
+                        const finalUrl = response.url;
+                        
+                        // AllOrigins proxy'den gelen içeriği parse et
+                        return response.text();
+                    })
+                    .then(html => {
+                        // HTML içinden Pinterest pin linkini bul
+                        const pinMatch = html.match(/pinterest\.com\/pin\/(\d+)/);
+                        if (pinMatch) {
+                            const pinId = pinMatch[1];
+                            resolve(`https://www.pinterest.com/pin/${pinId}/`);
+                        } else {
+                            // Alternatif: meta redirect tag'i ara
+                            const metaMatch = html.match(/<meta[^>]*http-equiv=["']refresh["'][^>]*content=["'][^"]*url=([^"']+)/i);
+                            if (metaMatch && metaMatch[1].includes('pinterest.com')) {
+                                resolve(metaMatch[1]);
+                            } else {
+                                reject('Pin ID bulunamadı');
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
+            });
         }
 
         function displayVideo(videoUrl) {
