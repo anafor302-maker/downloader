@@ -6,6 +6,10 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 from urllib.parse import urlparse, unquote
+import logging
+
+# Logger oluştur
+logger = logging.getLogger(__name__)
 
 def index(request):
     """Ana sayfa"""
@@ -26,25 +30,7 @@ def download_video(request):
                     'error': 'Geçerli bir Pinterest linki giriniz'
                 })
             
-            # pin.it linklerini takip et
-            if 'pin.it' in pinterest_url:
-                try:
-                    # Redirect'i takip et
-                    redirect_response = requests.get(
-                        pinterest_url, 
-                        headers=headers, 
-                        allow_redirects=True,
-                        timeout=15
-                    )
-                    pinterest_url = redirect_response.url
-                    print(f"Redirect edildi: {pinterest_url}")
-                except Exception as e:
-                    print(f"Redirect hatası: {e}")
-                    # Fallback: URL'den pin kodunu çıkar
-                    pin_code = pinterest_url.split('/')[-1].split('?')[0]
-                    pinterest_url = f'https://www.pinterest.com/pin/{pin_code}/'
-            
-            # Pinterest sayfasını çek
+            # Headers'ı önce tanımla
             headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
                 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -58,6 +44,27 @@ def download_video(request):
                 'Sec-Fetch-Site': 'none',
                 'Cache-Control': 'max-age=0',
             }
+            
+            # pin.it linklerini takip et
+            if 'pin.it' in pinterest_url:
+                try:
+                    # Redirect'i takip et
+                    redirect_response = requests.get(
+                        pinterest_url, 
+                        headers=headers, 
+                        allow_redirects=True,
+                        timeout=15
+                    )
+                    pinterest_url = redirect_response.url
+                    logger.info(f"Redirect edildi: {pinterest_url}")
+                except Exception as e:
+                    logger.error(f"Redirect hatası: {e}")
+                    return JsonResponse({
+                        'success': False,
+                        'error': f'pin.it linki çözümlenemedi: {str(e)}'
+                    })
+            
+            # Pinterest sayfasını çek
             
             # Timeout ekle ve redirectleri takip et
             try:
@@ -92,8 +99,8 @@ def download_video(request):
             html_content = response.text
             
             # Debug için
-            print(f"Final URL: {response.url}")
-            print(f"Status Code: {response.status_code}")
+            logger.info(f"Final URL: {response.url}")
+            logger.info(f"Status Code: {response.status_code}")
             
             # Video URL'sini bul
             video_url = None
@@ -160,23 +167,23 @@ def download_video(request):
                     matches = re.findall(pattern, html_content)
                     if matches:
                         video_url = matches[0]
-                        print(f"Video bulundu (Pattern): {video_url}")
+                        logger.info(f"Video bulundu (Pattern): {video_url}")
                         break
             
             if not video_url:
                 # Debug: HTML'in bir kısmını logla
-                print("HTML içeriği (ilk 2000 karakter):")
-                print(html_content[:2000])
-                print("\n=== VIDEO ARANIMI ===")
+                logger.warning("HTML içeriği (ilk 2000 karakter):")
+                logger.warning(html_content[:2000])
+                logger.warning("\n=== VIDEO ARANIMI ===")
                 
                 # .mp4 varlığını kontrol et
                 if '.mp4' in html_content:
-                    print("HTML'de .mp4 bulundu!")
+                    logger.info("HTML'de .mp4 bulundu!")
                     # Tüm .mp4 linklerini bul
                     all_mp4s = re.findall(r'(https://[^\s"<>]+\.mp4[^\s"<>]*)', html_content)
-                    print(f"Bulunan tüm .mp4 linkleri: {all_mp4s[:5]}")  # İlk 5'ini göster
+                    logger.info(f"Bulunan tüm .mp4 linkleri: {all_mp4s[:5]}")  # İlk 5'ini göster
                 else:
-                    print("HTML'de .mp4 bulunamadı - Bu link bir resim olabilir")
+                    logger.warning("HTML'de .mp4 bulunamadı - Bu link bir resim olabilir")
                 
                 return JsonResponse({
                     'success': False,
