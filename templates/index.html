@@ -354,24 +354,21 @@
             try {
                 // pin.it linkini çöz (client-side redirect takibi)
                 if (url.includes('pin.it')) {
-                    try {
-                        // Iframe ile redirect'i takip et
-                        const resolvedUrl = await resolvePinItUrl(url);
-                        if (resolvedUrl) {
-                            url = resolvedUrl;
-                            console.log('Çözümlenen URL:', url);
-                        }
-                    } catch (e) {
-                        console.log('pin.it çözümlenemedi, orijinal URL kullanılıyor:', e);
-                    }
+                    // Önce backend'e denetelim
+                    // Backend çözemezse kullanıcıya bilgi ver
+                    showInfo('⚠️ pin.it linkleri: Linki tarayıcınızda açın ve uzun pinterest.com linkini buraya yapıştırın');
                 }
 
                 const response = await fetch('/download/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'X-User-Agent': navigator.userAgent, // Cihaz bilgisini gönder
                     },
-                    body: JSON.stringify({ url: url })
+                    body: JSON.stringify({ 
+                        url: url,
+                        is_mobile: /Mobile|Android|iPhone/i.test(navigator.userAgent)
+                    })
                 });
 
                 const data = await response.json();
@@ -390,40 +387,25 @@
             }
         }
 
-        // pin.it URL'lerini çöz
+        // pin.it URL'lerini çöz (farklı yöntem)
         async function resolvePinItUrl(shortUrl) {
             return new Promise((resolve, reject) => {
-                // CORS proxy kullan
-                const proxyUrl = 'https://api.allorigins.win/raw?url=';
+                // Kullanıcıya açıklama göster
+                showInfo('pin.it linki çözümleniyor...');
                 
-                fetch(proxyUrl + encodeURIComponent(shortUrl))
-                    .then(response => {
-                        // Response URL'sinden gerçek Pinterest linkini al
-                        const finalUrl = response.url;
-                        
-                        // AllOrigins proxy'den gelen içeriği parse et
-                        return response.text();
-                    })
-                    .then(html => {
-                        // HTML içinden Pinterest pin linkini bul
-                        const pinMatch = html.match(/pinterest\.com\/pin\/(\d+)/);
-                        if (pinMatch) {
-                            const pinId = pinMatch[1];
-                            resolve(`https://www.pinterest.com/pin/${pinId}/`);
-                        } else {
-                            // Alternatif: meta redirect tag'i ara
-                            const metaMatch = html.match(/<meta[^>]*http-equiv=["']refresh["'][^>]*content=["'][^"]*url=([^"']+)/i);
-                            if (metaMatch && metaMatch[1].includes('pinterest.com')) {
-                                resolve(metaMatch[1]);
-                            } else {
-                                reject('Pin ID bulunamadı');
-                            }
-                        }
-                    })
-                    .catch(error => {
-                        reject(error);
-                    });
+                // Backend'e gönder, backend çözemezse kullanıcıdan yardım iste
+                setTimeout(() => {
+                    reject('pin.it linkleri için lütfen linki tarayıcınızda açın ve uzun Pinterest URL\'sini kullanın');
+                }, 1000);
             });
+        }
+
+        function showInfo(message) {
+            const info = document.getElementById('info');
+            if (info) {
+                info.textContent = message;
+                info.style.display = 'block';
+            }
         }
 
         function displayVideo(videoUrl) {
