@@ -46,75 +46,13 @@ def download_video(request):
                 'Cache-Control': 'max-age=0',
             }
             
-            # pin.it linklerini takip et
+            # pin.it kontrolü - Artık backend'de çözmeye çalışmıyoruz
+            # Frontend çözecek
             if 'pin.it' in pinterest_url:
-                try:
-                    # Session kullan - cookie'leri takip et
-                    session = requests.Session()
-                    session.headers.update(headers)
-                    
-                    # Redirect'i takip et
-                    redirect_response = session.get(
-                        pinterest_url, 
-                        allow_redirects=True,
-                        timeout=20,
-                        verify=True
-                    )
-                    
-                    # Final URL'yi al
-                    final_url = redirect_response.url
-                    
-                    # Eğer hala pin.it ise, Location header'ını kontrol et
-                    if 'pin.it' in final_url or 'pinterest.com/pin' not in final_url:
-                        # Manuel redirect takibi
-                        initial_response = session.get(
-                            pinterest_url,
-                            allow_redirects=False,
-                            timeout=10
-                        )
-                        
-                        if 'Location' in initial_response.headers:
-                            final_url = initial_response.headers['Location']
-                            logger.info(f"Location header'dan alındı: {final_url}")
-                        else:
-                            # Son çare: pin.it'ten pin ID'sini çıkarmayı dene
-                            pin_code = pinterest_url.split('/')[-1].split('?')[0].strip()
-                            if pin_code and len(pin_code) > 5:
-                                # pin.it sayfasını çek ve içinden pin ID'yi bul
-                                page_content = redirect_response.text
-                                pin_match = re.search(r'pinterest\.com/pin/(\d+)', page_content)
-                                if pin_match:
-                                    final_url = f'https://www.pinterest.com/pin/{pin_match.group(1)}/'
-                                    logger.info(f"HTML'den pin ID bulundu: {final_url}")
-                    
-                    pinterest_url = final_url
-                    logger.info(f"Redirect edildi: {pinterest_url}")
-                    
-                except requests.exceptions.SSLError as e:
-                    logger.error(f"SSL Hatası: {e}")
-                    # SSL hatası varsa verify=False ile dene
-                    try:
-                        redirect_response = requests.get(
-                            pinterest_url, 
-                            headers=headers,
-                            allow_redirects=True,
-                            timeout=20,
-                            verify=False
-                        )
-                        pinterest_url = redirect_response.url
-                        logger.info(f"SSL bypass ile redirect edildi: {pinterest_url}")
-                    except Exception as e2:
-                        logger.error(f"SSL bypass de başarısız: {e2}")
-                        return JsonResponse({
-                            'success': False,
-                            'error': f'pin.it linki çözümlenemedi. Lütfen pinterest.com linkini kullanın.'
-                        })
-                except Exception as e:
-                    logger.error(f"Redirect hatası: {e}")
-                    return JsonResponse({
-                        'success': False,
-                        'error': f'pin.it linki çözümlenemedi. Lütfen linki tarayıcıda açıp pinterest.com linkini kullanın.'
-                    })
+                return JsonResponse({
+                    'success': False,
+                    'error': 'pin.it linkleri sunucuda çözülemiyor. Lütfen frontend çözümleyiciyi kullanın veya pinterest.com linkini girin.'
+                })
             
             # Pinterest sayfasını çek
             

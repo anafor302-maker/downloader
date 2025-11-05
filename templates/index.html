@@ -21,7 +21,6 @@
             padding: 20px;
         }
 
-        /* AdSense Banner Stilleri */
         .ad-container {
             background: white;
             border-radius: 10px;
@@ -58,7 +57,6 @@
             font-size: 12px;
         }
 
-        /* Ana Container için Wrapper */
         .main-wrapper {
             display: flex;
             gap: 20px;
@@ -134,10 +132,6 @@
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
 
-        .btn:active {
-            transform: translateY(0);
-        }
-
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
@@ -165,44 +159,36 @@
             100% { transform: rotate(360deg); }
         }
 
-        .result {
+        .result, .error, .success, .info-box {
             display: none;
             margin-top: 20px;
-            padding: 20px;
-            background: #f8f9fa;
+            padding: 15px;
             border-radius: 10px;
+            font-size: 14px;
         }
 
         .error {
             background: #fee;
             color: #c33;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            display: none;
             border-left: 4px solid #c33;
         }
 
         .success {
             background: #efe;
             color: #363;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 20px;
-            display: none;
             border-left: 4px solid #363;
         }
 
-        .video-preview {
-            margin-top: 15px;
-            border-radius: 10px;
-            overflow: hidden;
+        .info-box {
+            background: #e7f1ff;
+            color: #245ea8;
+            border-left: 4px solid #245ea8;
         }
 
         .video-preview video {
             width: 100%;
             max-height: 300px;
-            display: block;
+            border-radius: 10px;
         }
 
         .download-btn {
@@ -220,59 +206,24 @@
             margin-top: 5px;
         }
 
-        /* Responsive Design */
         @media (max-width: 1024px) {
             .main-wrapper {
                 flex-direction: column;
                 align-items: center;
             }
-
-            .ad-container.sidebar {
-                max-width: 728px;
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 30px 20px;
-            }
-
-            h1 {
-                font-size: 24px;
-            }
-
-            .ad-container.top-banner,
-            .ad-container.bottom-banner {
-                max-width: 320px;
-                min-height: 50px;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- ==================== REKLAM ALANI 1: ÜST BANNER (728x90) ==================== -->
-    <!-- En etkili alan - Sayfa açılır açılmaz görünür -->
     <div class="ad-container top-banner">
-        <div class="ad-placeholder">
-            <!-- BURAYA ADSENSE KODUNUZU EKLEYİN -->
-            <!-- Önerilen: 728x90 Leaderboard veya Responsive -->
-            AdSense Banner (728x90)
-        </div>
+        <div class="ad-placeholder">AdSense Banner (728x90)</div>
     </div>
 
     <div class="main-wrapper">
-        <!-- ==================== REKLAM ALANI 2: SAĞ SIDEBAR (300x250) ==================== -->
-        <!-- Desktop'ta sürekli görünür, mobilde alta kayar -->
         <div class="ad-container sidebar">
-            <div class="ad-placeholder">
-                <!-- BURAYA ADSENSE KODUNUZU EKLEYİN -->
-                <!-- Önerilen: 300x250 Medium Rectangle -->
-                AdSense Sidebar (300x250)
-            </div>
+            <div class="ad-placeholder">AdSense Sidebar (300x250)</div>
         </div>
 
-        <!-- Ana İçerik -->
         <div class="container">
             <h1>📌 Pinterest Video İndirici</h1>
             <p class="subtitle">Pinterest'ten video indirmek artık çok kolay!</p>
@@ -290,20 +241,15 @@
                 <p style="margin-top: 10px; color: #666;">Video aranıyor...</p>
             </div>
 
-            <div class="error" id="error"></div>
-            <div class="success" id="success"></div>
+            <div id="info" class="info-box"></div>
+            <div id="error" class="error"></div>
+            <div id="success" class="success"></div>
 
             <div class="result" id="result">
-                <div class="video-preview" id="video-preview"></div>
-                
-                <!-- ==================== REKLAM ALANI 3: SONUÇ ARASI (İÇERİKLE UYUMLU) ==================== -->
-                <!-- Video bulunduğunda gösterilir, yüksek tıklama oranı -->
-                <div class="ad-container" style="margin: 20px 0; min-height: 100px;">
-                    <div class="ad-placeholder">
-                        <!-- BURAYA ADSENSE KODUNUZU EKLEYİN -->
-                        <!-- Önerilen: Responsive veya 336x280 -->
-                        AdSense İçerik İçi Reklam
-                    </div>
+                <div id="video-preview"></div>
+
+                <div class="ad-container" style="margin: 20px 0;">
+                    <div class="ad-placeholder">AdSense İçerik İçi Reklam</div>
                 </div>
 
                 <a class="btn download-btn" id="download-link" download="pinterest-video.mp4">
@@ -313,134 +259,81 @@
         </div>
     </div>
 
-    <!-- ==================== REKLAM ALANI 4: ALT BANNER (728x90) ==================== -->
-    <!-- Sayfa sonunda, kullanıcı işlemini tamamladıktan sonra görünür -->
-    <div class="ad-container bottom-banner" style="margin-top: 20px;">
-        <div class="ad-placeholder">
-            <!-- BURAYA ADSENSE KODUNUZU EKLEYİN -->
-            <!-- Önerilen: 728x90 Leaderboard veya Responsive -->
-            AdSense Alt Banner (728x90)
-        </div>
+    <div class="ad-container bottom-banner">
+        <div class="ad-placeholder">AdSense Alt Banner (728x90)</div>
     </div>
 
     <script>
+        function showInfo(message) {
+            const info = document.getElementById('info');
+            info.textContent = message;
+            info.style.display = 'block';
+        }
+
+        function showError(message) {
+            const el = document.getElementById('error');
+            el.textContent = message;
+            el.style.display = 'block';
+        }
+
+        function showSuccess(message) {
+            const el = document.getElementById('success');
+            el.textContent = message;
+            el.style.display = 'block';
+        }
+
         async function getVideo() {
-            let url = document.getElementById('pinterest-url').value.trim();
+            const urlField = document.getElementById('pinterest-url');
+            const url = urlField.value.trim();
             const btn = document.getElementById('download-btn');
             const loading = document.getElementById('loading');
+            const result = document.getElementById('result');
+            const info = document.getElementById('info');
             const error = document.getElementById('error');
             const success = document.getElementById('success');
-            const result = document.getElementById('result');
 
-            // Temizle
-            error.style.display = 'none';
-            success.style.display = 'none';
-            result.style.display = 'none';
+            error.style.display = success.style.display = info.style.display = result.style.display = 'none';
 
-            if (!url) {
-                showError('Lütfen bir Pinterest linki giriniz!');
-                return;
-            }
+            if (!url) return showError('Lütfen bir Pinterest linki giriniz!');
+            if (!url.includes('pinterest') && !url.includes('pin.it'))
+                return showError('Lütfen geçerli bir Pinterest linki giriniz!');
 
-            if (!url.includes('pinterest') && !url.includes('pin.it')) {
-                showError('Lütfen geçerli bir Pinterest linki giriniz!');
-                return;
-            }
-
-            // Loading göster
             btn.disabled = true;
             loading.style.display = 'block';
+            showInfo('📍 Link kontrol ediliyor...');
 
             try {
-                // pin.it linkini çöz (client-side redirect takibi)
-                if (url.includes('pin.it')) {
-                    // Önce backend'e denetelim
-                    // Backend çözemezse kullanıcıya bilgi ver
-                    showInfo('⚠️ pin.it linkleri: Linki tarayıcınızda açın ve uzun pinterest.com linkini buraya yapıştırın');
-                }
-
                 const response = await fetch('/download/', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-User-Agent': navigator.userAgent, // Cihaz bilgisini gönder
-                    },
-                    body: JSON.stringify({ 
-                        url: url,
-                        is_mobile: /Mobile|Android|iPhone/i.test(navigator.userAgent)
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url })
                 });
 
                 const data = await response.json();
 
                 if (data.success) {
                     showSuccess('Video bulundu!');
-                    displayVideo(data.video_url);
+                    document.getElementById('video-preview').innerHTML = `
+                        <video controls>
+                            <source src="${data.video_url}" type="video/mp4">
+                            Tarayıcınız video etiketini desteklemiyor.
+                        </video>
+                    `;
+                    document.getElementById('download-link').href = data.video_url;
+                    result.style.display = 'block';
                 } else {
-                    showError(data.error || 'Video bulunamadı');
+                    showError(data.error || 'Video bulunamadı.');
                 }
-            } catch (err) {
-                showError('Bir hata oluştu: ' + err.message);
+            } catch (e) {
+                showError('Bir hata oluştu: ' + e.message);
             } finally {
                 btn.disabled = false;
                 loading.style.display = 'none';
             }
         }
 
-        // pin.it URL'lerini çöz (farklı yöntem)
-        async function resolvePinItUrl(shortUrl) {
-            return new Promise((resolve, reject) => {
-                // Kullanıcıya açıklama göster
-                showInfo('pin.it linki çözümleniyor...');
-                
-                // Backend'e gönder, backend çözemezse kullanıcıdan yardım iste
-                setTimeout(() => {
-                    reject('pin.it linkleri için lütfen linki tarayıcınızda açın ve uzun Pinterest URL\'sini kullanın');
-                }, 1000);
-            });
-        }
-
-        function showInfo(message) {
-            const info = document.getElementById('info');
-            if (info) {
-                info.textContent = message;
-                info.style.display = 'block';
-            }
-        }
-
-        function displayVideo(videoUrl) {
-            const preview = document.getElementById('video-preview');
-            const result = document.getElementById('result');
-            const downloadLink = document.getElementById('download-link');
-
-            preview.innerHTML = `
-                <video controls>
-                    <source src="${videoUrl}" type="video/mp4">
-                    Tarayıcınız video etiketini desteklemiyor.
-                </video>
-            `;
-
-            downloadLink.href = videoUrl;
-            result.style.display = 'block';
-        }
-
-        function showError(message) {
-            const error = document.getElementById('error');
-            error.textContent = message;
-            error.style.display = 'block';
-        }
-
-        function showSuccess(message) {
-            const success = document.getElementById('success');
-            success.textContent = message;
-            success.style.display = 'block';
-        }
-
-        // Enter tuşuyla da çalışsın
-        document.getElementById('pinterest-url').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                getVideo();
-            }
+        document.getElementById('pinterest-url').addEventListener('keypress', e => {
+            if (e.key === 'Enter') getVideo();
         });
     </script>
 </body>
