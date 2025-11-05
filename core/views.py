@@ -1,3 +1,4 @@
+# views.py
 import requests
 import re
 from django.shortcuts import render
@@ -15,9 +16,10 @@ def download_video(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            pinterest_url = data.get('url', '')
+            pinterest_url = data.get('url', '').strip()
             
-            if not pinterest_url or 'pinterest' not in pinterest_url.lower():
+            # Pinterest veya pin.it kontrolü
+            if not pinterest_url or ('pinterest' not in pinterest_url.lower() and 'pin.it' not in pinterest_url.lower()):
                 return JsonResponse({
                     'success': False,
                     'error': 'Geçerli bir Pinterest linki giriniz'
@@ -25,10 +27,13 @@ def download_video(request):
             
             # Pinterest sayfasını çek
             headers = {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                'Accept-Language': 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7',
             }
             
-            response = requests.get(pinterest_url, headers=headers)
+            # pin.it linklerini takip et (redirect)
+            response = requests.get(pinterest_url, headers=headers, allow_redirects=True)
             
             if response.status_code != 200:
                 return JsonResponse({

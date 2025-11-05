@@ -16,9 +16,55 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             padding: 20px;
+        }
+
+        /* AdSense Banner Stilleri */
+        .ad-container {
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100px;
+        }
+
+        .ad-container.top-banner {
+            max-width: 728px;
+            width: 100%;
+            min-height: 90px;
+        }
+
+        .ad-container.sidebar {
+            max-width: 300px;
+            width: 100%;
+            min-height: 250px;
+        }
+
+        .ad-container.bottom-banner {
+            max-width: 728px;
+            width: 100%;
+            min-height: 90px;
+        }
+
+        .ad-placeholder {
+            color: #999;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        /* Ana Container için Wrapper */
+        .main-wrapper {
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
+            width: 100%;
+            align-items: flex-start;
         }
 
         .container {
@@ -26,8 +72,8 @@
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             padding: 40px;
+            flex: 1;
             max-width: 600px;
-            width: 100%;
         }
 
         h1 {
@@ -173,34 +219,107 @@
             color: #888;
             margin-top: 5px;
         }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .ad-container.sidebar {
+                max-width: 728px;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .ad-container.top-banner,
+            .ad-container.bottom-banner {
+                max-width: 320px;
+                min-height: 50px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>📌 Pinterest Video İndirici</h1>
-        <p class="subtitle">Pinterest'ten video indirmek artık çok kolay!</p>
+    <!-- ==================== REKLAM ALANI 1: ÜST BANNER (728x90) ==================== -->
+    <!-- En etkili alan - Sayfa açılır açılmaz görünür -->
+    <div class="ad-container top-banner">
+        <div class="ad-placeholder">
+            <!-- BURAYA ADSENSE KODUNUZU EKLEYİN -->
+            <!-- Önerilen: 728x90 Leaderboard veya Responsive -->
+            AdSense Banner (728x90)
+        </div>
+    </div>
 
-        <div class="input-group">
-            <label for="pinterest-url">Pinterest Video Linki</label>
-            <input type="text" id="pinterest-url" placeholder="https://www.pinterest.com/pin/..." />
-            <div class="example">Örnek: https://www.pinterest.com/pin/123456789/</div>
+    <div class="main-wrapper">
+        <!-- ==================== REKLAM ALANI 2: SAĞ SIDEBAR (300x250) ==================== -->
+        <!-- Desktop'ta sürekli görünür, mobilde alta kayar -->
+        <div class="ad-container sidebar">
+            <div class="ad-placeholder">
+                <!-- BURAYA ADSENSE KODUNUZU EKLEYİN -->
+                <!-- Önerilen: 300x250 Medium Rectangle -->
+                AdSense Sidebar (300x250)
+            </div>
         </div>
 
-        <button class="btn" id="download-btn" onclick="getVideo()">Video Bul</button>
+        <!-- Ana İçerik -->
+        <div class="container">
+            <h1>📌 Pinterest Video İndirici</h1>
+            <p class="subtitle">Pinterest'ten video indirmek artık çok kolay!</p>
 
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p style="margin-top: 10px; color: #666;">Video aranıyor...</p>
+            <div class="input-group">
+                <label for="pinterest-url">Pinterest Video Linki</label>
+                <input type="text" id="pinterest-url" placeholder="https://pin.it/..." />
+                <div class="example">Örnek: https://pin.it/61bEscv39 veya https://www.pinterest.com/pin/...</div>
+            </div>
+
+            <button class="btn" id="download-btn" onclick="getVideo()">Video Bul</button>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p style="margin-top: 10px; color: #666;">Video aranıyor...</p>
+            </div>
+
+            <div class="error" id="error"></div>
+            <div class="success" id="success"></div>
+
+            <div class="result" id="result">
+                <div class="video-preview" id="video-preview"></div>
+                
+                <!-- ==================== REKLAM ALANI 3: SONUÇ ARASI (İÇERİKLE UYUMLU) ==================== -->
+                <!-- Video bulunduğunda gösterilir, yüksek tıklama oranı -->
+                <div class="ad-container" style="margin: 20px 0; min-height: 100px;">
+                    <div class="ad-placeholder">
+                        <!-- BURAYA ADSENSE KODUNUZU EKLEYİN -->
+                        <!-- Önerilen: Responsive veya 336x280 -->
+                        AdSense İçerik İçi Reklam
+                    </div>
+                </div>
+
+                <a class="btn download-btn" id="download-link" download="pinterest-video.mp4">
+                    ⬇️ Videoyu İndir
+                </a>
+            </div>
         </div>
+    </div>
 
-        <div class="error" id="error"></div>
-        <div class="success" id="success"></div>
-
-        <div class="result" id="result">
-            <div class="video-preview" id="video-preview"></div>
-            <a class="btn download-btn" id="download-link" download="pinterest-video.mp4">
-                ⬇️ Videoyu İndir
-            </a>
+    <!-- ==================== REKLAM ALANI 4: ALT BANNER (728x90) ==================== -->
+    <!-- Sayfa sonunda, kullanıcı işlemini tamamladıktan sonra görünür -->
+    <div class="ad-container bottom-banner" style="margin-top: 20px;">
+        <div class="ad-placeholder">
+            <!-- BURAYA ADSENSE KODUNUZU EKLEYİN -->
+            <!-- Önerilen: 728x90 Leaderboard veya Responsive -->
+            AdSense Alt Banner (728x90)
         </div>
     </div>
 
@@ -223,7 +342,7 @@
                 return;
             }
 
-            if (!url.includes('pinterest')) {
+            if (!url.includes('pinterest') && !url.includes('pin.it')) {
                 showError('Lütfen geçerli bir Pinterest linki giriniz!');
                 return;
             }
