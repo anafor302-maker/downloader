@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pinterest Video İndirici</title>
+    <meta name="description" content="Pinterest video indirici ile Pinterest videolarını ücretsiz ve filigransız indir.">
+    <meta property="og:title" content="Pinterest Video İndirici">
+    <meta property="og:description" content="Pinterest videolarını kolayca indir.">
+    <meta property="og:image" content="/static/thumbnail.png">
+    <meta name="robots" content="index, follow">
+    <link rel="icon" type="image/png" href="/static/favicon.png">
     <style>
         * {
             margin: 0;
@@ -33,23 +39,9 @@
             min-height: 100px;
         }
 
-        .ad-container.top-banner {
-            max-width: 728px;
-            width: 100%;
-            min-height: 90px;
-        }
-
-        .ad-container.sidebar {
-            max-width: 300px;
-            width: 100%;
-            min-height: 250px;
-        }
-
-        .ad-container.bottom-banner {
-            max-width: 728px;
-            width: 100%;
-            min-height: 90px;
-        }
+        .ad-container.top-banner { max-width: 728px; width: 100%; min-height: 90px; }
+        .ad-container.sidebar { max-width: 300px; width: 100%; min-height: 250px; }
+        .ad-container.bottom-banner { max-width: 728px; width: 100%; min-height: 90px; }
 
         .ad-placeholder {
             color: #999;
@@ -88,9 +80,7 @@
             font-size: 14px;
         }
 
-        .input-group {
-            margin-bottom: 20px;
-        }
+        .input-group { margin-bottom: 20px; }
 
         label {
             display: block;
@@ -127,23 +117,10 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            margin: 20px 0;
-        }
-
+        .loading { display: none; text-align: center; margin: 20px 0; }
         .spinner {
             border: 3px solid #f3f3f3;
             border-top: 3px solid #667eea;
@@ -154,10 +131,7 @@
             margin: 0 auto;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .result, .error, .success, .info-box {
             display: none;
@@ -167,50 +141,33 @@
             font-size: 14px;
         }
 
-        .error {
-            background: #fee;
-            color: #c33;
-            border-left: 4px solid #c33;
-        }
-
-        .success {
-            background: #efe;
-            color: #363;
-            border-left: 4px solid #363;
-        }
-
-        .info-box {
-            background: #e7f1ff;
-            color: #245ea8;
-            border-left: 4px solid #245ea8;
-        }
+        .error { background: #fee; color: #c33; border-left: 4px solid #c33; }
+        .success { background: #efe; color: #363; border-left: 4px solid #363; }
+        .info-box { background: #e7f1ff; color: #245ea8; border-left: 4px solid #245ea8; }
 
         .video-preview video {
             width: 100%;
             max-height: 300px;
-            border-radius: 10px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         .download-btn {
             margin-top: 15px;
             background: #28a745;
         }
+        .download-btn:hover { background: #218838; }
 
-        .download-btn:hover {
-            background: #218838;
-        }
-
-        .example {
-            font-size: 12px;
-            color: #888;
-            margin-top: 5px;
-        }
+        .example { font-size: 12px; color: #888; margin-top: 5px; }
 
         @media (max-width: 1024px) {
-            .main-wrapper {
-                flex-direction: column;
-                align-items: center;
-            }
+            .main-wrapper { flex-direction: column; align-items: center; }
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 25px; }
+            h1 { font-size: 24px; }
+            input[type="text"], .btn { font-size: 14px; padding: 12px; }
         }
     </style>
 </head>
@@ -247,12 +204,10 @@
 
             <div class="result" id="result">
                 <div id="video-preview"></div>
-
                 <div class="ad-container" style="margin: 20px 0;">
                     <div class="ad-placeholder">AdSense İçerik İçi Reklam</div>
                 </div>
-
-                <a class="btn download-btn" id="download-link" download="pinterest-video.mp4">
+                <a class="btn download-btn" id="download-link" download="pinterest-video.mp4" target="_blank" rel="noopener noreferrer">
                     ⬇️ Videoyu İndir
                 </a>
             </div>
@@ -282,6 +237,18 @@
             el.style.display = 'block';
         }
 
+        async function resolveShortLink(url) {
+            if (!url.includes('pin.it')) return url;
+            showInfo('🔗 Kısaltılmış link çözülüyor...');
+            try {
+                const res = await fetch(url, { method: 'HEAD', redirect: 'follow' });
+                return res.url || url;
+            } catch (e) {
+                console.warn("pin.it çözümlemesi başarısız:", e);
+                return url;
+            }
+        }
+
         async function getVideo() {
             const urlField = document.getElementById('pinterest-url');
             const url = urlField.value.trim();
@@ -303,16 +270,17 @@
             showInfo('📍 Link kontrol ediliyor...');
 
             try {
+                const resolvedUrl = await resolveShortLink(url);
                 const response = await fetch('/download/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ url })
+                    body: JSON.stringify({ url: resolvedUrl })
                 });
 
                 const data = await response.json();
 
                 if (data.success) {
-                    showSuccess('Video bulundu!');
+                    showSuccess('🎉 Video bulundu!');
                     document.getElementById('video-preview').innerHTML = `
                         <video controls>
                             <source src="${data.video_url}" type="video/mp4">
@@ -334,6 +302,10 @@
 
         document.getElementById('pinterest-url').addEventListener('keypress', e => {
             if (e.key === 'Enter') getVideo();
+        });
+
+        document.getElementById('pinterest-url').addEventListener('input', () => {
+            document.getElementById('error').style.display = 'none';
         });
     </script>
 </body>
