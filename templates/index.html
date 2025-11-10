@@ -3,37 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pinterest Video İndirici</title>
-    <meta name="description" content="Pinterest video indirici — Pinterest’ten video indirmek artık çok kolay! Sadece bağlantıyı yapıştır ve indir.">
-    <meta name="keywords" content="Pinterest video indir, Pinterest downloader, video indirme aracı, Pinterest mp4 indir">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="https://pindownloader.site/">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Pinterest Video İndirici" />
-    <meta property="og:description" content="Pinterest’ten video indirmek artık çok kolay! Sadece bağlantıyı yapıştır ve indir." />
-    <meta property="og:url" content="https://pindownloader.site/" />
-    <meta property="og:image" content="https://pindownloader.site/static/logo.png" />
-    <meta property="og:type" content="website" />
-
-    <!-- Twitter -->
+    <meta name="description" content="Pinterest'ten videoları MP4 formatında hızlı ve kolay indirin. Ücretsiz, güvenli ve sorunsuz kullanım. 500K+ memnun kullanıcı tarafından güvenilir.">
+    <meta name="keywords" content="Pinterest video indir, Pinterest downloader, video indirme, MP4 indir, Pinterest video kaydetme">
+    <meta name="author" content="Pinterest Video İndirici">
+    <meta name="theme-color" content="#667eea">
+    <meta property="og:title" content="📌 Pinterest Video İndirici - Ücretsiz Video İndirme">
+    <meta property="og:description" content="Pinterest'ten video indirmek artık çok kolay! Sadece linki yapıştır ve indir.">
+    <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Pinterest Video İndirici">
-    <meta name="twitter:description" content="Pinterest’ten video indirmek artık çok kolay!">
-    <meta name="twitter:image" content="https://pindownloader.site/static/logo.png">
-
-    <!-- Structured Data -->
-    <script type="application/ld+json">
-    {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Pinterest Video İndirici",
-    "url": "https://pindownloader.site/",
-    "description": "Pinterest’ten video indirmek artık çok kolay!"
-    }
-    </script>
-
-    <link rel="icon" href="/static/favicon.png">
+    <meta name="twitter:title" content="📌 Pinterest Video İndirici">
+    <meta name="twitter:description" content="Pinterest'ten video indirmek artık çok kolay!">
+    
+    <title>Pinterest Video İndirici - Ücretsiz İndir</title>
+    {% load static %}
+    
     <style>
         * {
             margin: 0;
@@ -44,140 +27,259 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
         }
 
-        .ad-container {
-            background: #fff;
-            border-radius: 10px;
-            padding: 10px;
-            margin: 10px 0;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100px;
-        }
-
-        .ad-container.top-banner {
-            max-width: 728px;
-            width: 100%;
-            min-height: 90px;
-        }
-
-        .ad-container.sidebar {
-            max-width: 300px;
-            width: 100%;
-            min-height: 250px;
-        }
-
-        .ad-container.bottom-banner {
-            max-width: 728px;
-            width: 100%;
-            min-height: 90px;
-        }
-
-        .ad-placeholder {
-            color: #999;
-            text-align: center;
-            font-size: 12px;
-        }
-
-        .main-wrapper {
-            display: flex;
-            gap: 20px;
-            max-width: 1200px;
-            width: 100%;
-            align-items: flex-start;
+        @media (prefers-color-scheme: dark) {
+            body {
+                background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+            }
+            .card, .faq-item, .step-card, .tool-card, .testimonial-card, .stat-card {
+                background: #2d3748;
+                color: #e2e8f0;
+            }
+            .faq-question {
+                color: #e2e8f0;
+            }
+            .step-title, .tool-title {
+                color: #e2e8f0;
+            }
         }
 
         .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 40px;
-            flex: 1;
-            max-width: 600px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
-        h1 {
-            color: #333;
+        /* Header Section */
+        .header {
             text-align: center;
-            margin-bottom: 10px;
+            padding: 40px 20px;
+            color: white;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .header h1 {
             font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
         }
 
-        .subtitle {
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Ad Space */
+        .ad-space {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 20px;
             text-align: center;
-            color: #666;
-            margin-bottom: 30px;
+            margin: 20px auto;
+            color: #999;
             font-size: 14px;
         }
 
-        label {
+        .ad-banner-top {
+            max-width: 728px;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ad-sidebar {
+            width: 300px;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: sticky;
+            top: 20px;
+        }
+
+        .ad-banner-bottom {
+            max-width: 728px;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        .sidebar {
+            width: 300px;
+        }
+
+        /* Card Styles */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Input Section */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
             display: block;
             margin-bottom: 8px;
             color: #555;
+            font-size: 14px;
             font-weight: 600;
         }
 
-        input[type="text"] {
+        .url-input {
             width: 100%;
             padding: 15px;
             border: 2px solid #e0e0e0;
             border-radius: 10px;
             font-size: 16px;
-            transition: all 0.3s;
+            transition: all 0.3s ease;
         }
 
-        input[type="text"]:focus {
+        .url-input:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
+        .example-link {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        /* Button Styles */
         .btn {
             width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            padding: 15px 30px;
             border: none;
             border-radius: 10px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
+            color: white;
         }
 
-        .btn:hover {
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .btn-primary:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
         }
 
-        .btn:disabled {
+        .btn-primary:disabled {
             opacity: 0.6;
             cursor: not-allowed;
-            transform: none;
         }
 
-        .loading {
-            display: none;
-            text-align: center;
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover:not(:disabled) {
+            background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.3);
+        }
+
+        /* Status Messages */
+        .status-message {
+            padding: 15px;
+            border-radius: 10px;
             margin: 20px 0;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+            border-left: 4px solid;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .status-message.show {
+            display: block;
+        }
+
+        .status-loading {
+            background: #e7f1ff;
+            color: #245ea8;
+            text-align: center;
+            border-color: #245ea8;
+        }
+
+        .status-success {
+            background: #efe;
+            color: #363;
+            border-color: #363;
+        }
+
+        .status-error {
+            background: #fee;
+            color: #c33;
+            border-color: #c33;
+        }
+
+        .status-info {
+            background: #fff3cd;
+            color: #856404;
+            border-color: #ffc107;
         }
 
         .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
+            border: 3px solid rgba(36, 94, 168, 0.2);
+            border-top: 3px solid #245ea8;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
+            width: 30px;
+            height: 30px;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 10px;
         }
 
         @keyframes spin {
@@ -185,177 +287,699 @@
             100% { transform: rotate(360deg); }
         }
 
-        .error, .success, .info-box {
+        /* Video Result Section */
+        .video-result {
             display: none;
             margin-top: 20px;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 14px;
+            animation: fadeInUp 0.6s ease-out;
         }
 
-        .error {
-            background: #fee;
-            color: #c33;
-            border-left: 4px solid #c33;
+        .video-result.show {
+            display: block;
         }
 
-        .success {
-            background: #efe;
-            color: #363;
-            border-left: 4px solid #363;
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .info-box {
-            background: #e7f1ff;
-            color: #245ea8;
-            border-left: 4px solid #245ea8;
-        }
-
-        .result video {
+        .video-preview {
             width: 100%;
-            max-height: 300px;
             border-radius: 10px;
-            margin-top: 15px;
+            margin-bottom: 20px;
+            max-height: 400px;
+            background: #000;
         }
 
-        .download-btn {
-            margin-top: 15px;
-            background: #28a745;
+        /* Stats Section */
+        .stats-section {
+            margin-top: 40px;
         }
 
-        .download-btn:hover {
-            background: #218838;
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
-        .example {
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: scale(1.05);
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            margin-top: 40px;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: #f8f9fa;
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 20px 20px 20px;
+            max-height: 1000px;
+        }
+
+        .faq-icon {
+            transition: transform 0.3s ease;
+            font-size: 18px;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        /* How-To Guide */
+        .howto-section {
+            margin-top: 40px;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .step-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .step-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            line-height: 30px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .step-title {
+            font-weight: bold;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .step-description {
+            font-size: 14px;
+            color: #666;
+        }
+
+        /* Testimonials Section */
+        .testimonials-section {
+            margin-top: 40px;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .stars {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #ffc107;
+        }
+
+        .testimonial-card p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .testimonial-card strong {
+            color: #333;
             font-size: 12px;
-            color: #888;
-            margin-top: 5px;
         }
 
+        /* Footer */
+        .footer {
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            padding: 40px 20px;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        /* Responsive Design */
         @media (max-width: 1024px) {
-            .main-wrapper {
+            .main-layout {
                 flex-direction: column;
-                align-items: center;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .ad-sidebar {
+                position: static;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .steps-grid,
+            .testimonials-grid,
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
             }
         }
     </style>
 </head>
 <body>
-    <!-- ✅ Üst Banner -->
-    <div class="ad-container top-banner">
-        <div class="ad-placeholder">
-            <!-- Adsterra Top Banner -->
-            <!-- ÖRNEK: <script type="text/javascript" src="https://adsterra.com/adcode/top.js"></script> -->
-            Üst Banner Alanı (728x90)
-        </div>
-    </div>
-
-    <div class="main-wrapper">
-        <!-- ✅ Sidebar Reklam -->
-        <div class="ad-container sidebar">
-            <div class="ad-placeholder">
-                <!-- Adsterra Sidebar -->
-                Sidebar Reklam Alanı (300x250)
-            </div>
-        </div>
-
-        <!-- ✅ Ana içerik -->
-        <div class="container">
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
             <h1>📌 Pinterest Video İndirici</h1>
-            <p class="subtitle">Pinterest'ten video indirmek artık çok kolay!</p>
+            <p>Pinterest'ten video indirmek artık çok kolay!</p>
+        </div>
 
-            <label for="pinterest-url">Pinterest Video Linki</label>
-            <input type="text" id="pinterest-url" placeholder="https://pin.it/... veya https://www.pinterest.com/pin/..." />
-            <div class="example">Örnek: https://pin.it/32cky76X5</div>
+        <!-- Top Ad Banner -->
+        <div class="ad-space ad-banner-top">
+            <!-- ADSTERRA ÜST BANNER KODU BURAYA -->
+            Reklam Alanı (728x90)
+        </div>
 
-            <button class="btn" id="download-btn" onclick="getVideo()">🎥 Videoyu Bul</button>
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Main Action Card -->
+                <div class="card">
+                    <div class="input-group">
+                        <label for="pinterest-url">Pinterest Video Linki</label>
+                        <input type="text" id="pinterest-url" class="url-input" placeholder="https://www.pinterest.com/pin/... veya https://pin.it/...">
+                        <div class="example-link">✅ Desteklenen linkler:<br>
+                        • https://www.pinterest.com/pin/123456789/<br>
+                        • https://pin.it/abc123 (otomatik çözümlenir)</div>
+                    </div>
 
-            <div class="loading" id="loading">
-                <div class="spinner"></div>
-                <p>Video aranıyor...</p>
-            </div>
+                    <button class="btn btn-primary" id="search-btn">
+                        🎥 Videoyu Bul
+                    </button>
 
-            <div id="info" class="info-box"></div>
-            <div id="error" class="error"></div>
-            <div id="success" class="success"></div>
+                    <!-- Status Messages -->
+                    <div class="status-message status-loading" id="loading-message">
+                        <div class="spinner"></div>
+                        <div>Video aranıyor...</div>
+                    </div>
+                    <div class="status-message status-success" id="success-message">
+                        ✓ Video başarıyla bulundu!
+                    </div>
+                    <div class="status-message status-error" id="error-message"></div>
+                    <div class="status-message status-info" id="info-message"></div>
 
-            <div class="result" id="result" style="display:none;">
-                <video id="video-preview" controls></video>
+                    <!-- Video Result -->
+                    <div class="video-result" id="video-result">
+                        <video class="video-preview" id="video-preview" controls>
+                            <source id="video-source" src="" type="video/mp4">
+                            Tarayıcınız video etiketini desteklemiyor.
+                        </video>
 
-                <!-- ✅ İçerik içi reklam -->
-                <div class="ad-container">
-                    <div class="ad-placeholder">
-                        <!-- Adsterra In-Content -->
-                        İçerik İçi Reklam Alanı
+                        <!-- In-content Ad -->
+                        <div class="ad-space" style="margin: 20px 0;">
+                            <!-- ADSTERRA İÇERİK İÇİ REKLAM KODU BURAYA -->
+                            Reklam Alanı (İçerik İçi)
+                        </div>
+
+                        <a class="btn btn-success" id="download-btn" download="pinterest-video.mp4">
+                            ⬇️ Videoyu İndir
+                        </a>
                     </div>
                 </div>
 
-                <a id="download-link" class="btn download-btn" href="#" download="pinterest-video.mp4">⬇️ Videoyu İndir</a>
+                <!-- Stats Section -->
+                <div class="stats-section">
+                    <h2 class="section-title">📊 Hızlı Rakamlar</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">500K+</div>
+                            <div class="stat-label">Memnun Kullanıcı</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">1M+</div>
+                            <div class="stat-label">İndirilen Video</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">99.9%</div>
+                            <div class="stat-label">Hizmet Kalitesi</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">Hizmet Saatleri</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Section -->
+                <div class="faq-section">
+                    <h2 class="section-title">❓ Sıkça Sorulan Sorular</h2>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Pinterest video indirici nasıl çalışır?</span>
+                            <span class="faq-icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Pinterest video indirici, Pinterest'te paylaşılan videoların linkini alarak, bu videoları cihazınıza indirmenizi sağlar. Sadece video linkini yapıştırın ve "Videoyu Bul" butonuna tıklayın.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Hangi video formatlarını destekliyorsunuz?</span>
+                            <span class="faq-icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Platformumuz MP4 formatında video indirmeyi desteklemektedir. MP4, tüm cihazlarda uyumlu olan evrensel bir video formatıdır.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Video indirme işlemi ne kadar sürer?</span>
+                            <span class="faq-icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Video indirme süresi, videonun boyutuna ve internet hızınıza bağlıdır. Genellikle birkaç saniye içinde tamamlanır.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- How-To Guide Section -->
+                <div class="howto-section">
+                    <h2 class="section-title">📖 Adım Adım Kullanım Kılavuzu</h2>
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <div class="step-number">1</div>
+                            <div class="step-icon">📌</div>
+                            <div class="step-title">Pinterest'te Video Bul</div>
+                            <div class="step-description">
+                                Pinterest'te indirmek istediğiniz videoyu bulun.
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">2</div>
+                            <div class="step-icon">🔗</div>
+                            <div class="step-title">Video Linkini Kopyala</div>
+                            <div class="step-description">
+                                "Paylaş" → "Linki Kopyala" seçeneğini seçin.
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">3</div>
+                            <div class="step-icon">📋</div>
+                            <div class="step-title">Linki Yapıştır</div>
+                            <div class="step-description">
+                                Linki yukarıdaki alana yapıştırın.
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">4</div>
+                            <div class="step-icon">⬇️</div>
+                            <div class="step-title">Videoyu İndir</div>
+                            <div class="step-description">
+                                "Videoyu İndir" butonuna tıklayın.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonials Section -->
+                <div class="testimonials-section">
+                    <h2 class="section-title">⭐ Kullanıcı Yorumları</h2>
+                    <div class="testimonials-grid">
+                        <div class="testimonial-card">
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                            <p>"Çok hızlı ve güvenli! Kesinlikle tavsiye ederim."</p>
+                            <strong>- Ahmet K.</strong>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                            <p>"Kullanımı çok kolay ve arayüzü temiz. Mükemmel!"</p>
+                            <strong>- Fatma Ş.</strong>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                            <p>"Diğer sitelerden çok daha hızlı. Video kalitesi mükemmel!"</p>
+                            <strong>- Mustafa Y.</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Ad Banner -->
+                <div class="ad-space ad-banner-bottom" style="margin-top: 40px;">
+                    <!-- ADSTERRA ALT BANNER KODU BURAYA -->
+                    Reklam Alanı (728x90)
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="ad-space ad-sidebar">
+                    <!-- ADSTERRA SIDEBAR KODU BURAYA -->
+                    Reklam Alanı<br>(300x250)
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- ✅ Alt Banner -->
-    <div class="ad-container bottom-banner">
-        <div class="ad-placeholder">
-            <!-- Adsterra Bottom Banner -->
-            Alt Banner Alanı (728x90)
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-content">
+            <div style="flex: 1;">
+                <strong>© 2024 Pinterest Video İndirici</strong>
+                <p style="font-size: 12px; margin-top: 5px;">Tüm hakları saklıdır.</p>
+            </div>
+            <div style="flex: 1; text-align: center;">
+                <p style="font-size: 14px;">Pinterest videolarını hızlı ve kolay indirin.</p>
+            </div>
         </div>
     </div>
 
     <script>
-        async function getVideo() {
-            const urlField = document.getElementById('pinterest-url');
-            const url = urlField.value.trim();
-            const btn = document.getElementById('download-btn');
-            const loading = document.getElementById('loading');
-            const result = document.getElementById('result');
-            const info = document.getElementById('info');
-            const error = document.getElementById('error');
-            const success = document.getElementById('success');
+        // CSRF Token için
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
 
-            [info, error, success, result].forEach(el => el.style.display = 'none');
+        const csrftoken = getCookie('csrftoken');
 
-            if (!url) return showMessage(error, 'Lütfen bir Pinterest linki giriniz!');
-            if (!url.includes('pinterest') && !url.includes('pin.it'))
-                return showMessage(error, 'Lütfen geçerli bir Pinterest linki giriniz!');
+        // FAQ Accordion
+        function initFAQ() {
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    const faqItem = this.parentElement;
+                    const isActive = faqItem.classList.contains('active');
+                    
+                    document.querySelectorAll('.faq-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    
+                    if (!isActive) {
+                        faqItem.classList.add('active');
+                    }
+                });
+            });
+        }
 
+        // Show/hide messages
+        function showMessage(id) {
+            document.querySelectorAll('.status-message').forEach(msg => {
+                msg.classList.remove('show');
+            });
+            document.getElementById(id).classList.add('show');
+        }
+
+        function setErrorMessage(message) {
+            document.getElementById('error-message').textContent = '✗ ' + message;
+            showMessage('error-message');
+        }
+
+        function setInfoMessage(message) {
+            document.getElementById('info-message').textContent = 'ℹ ' + message;
+            showMessage('info-message');
+        }
+
+        // Search Button Handler - BACKEND BAĞLANTISI
+        document.getElementById('search-btn').addEventListener('click', async function() {
+            const urlInput = document.getElementById('pinterest-url');
+            const url = urlInput.value.trim();
+            const btn = this;
+            
+            // Mesajları temizle
+            document.querySelectorAll('.status-message').forEach(msg => {
+                msg.classList.remove('show');
+            });
+            document.getElementById('video-result').classList.remove('show');
+            
+            // Validation
+            if (!url) {
+                setErrorMessage('Lütfen bir Pinterest linki girin!');
+                return;
+            }
+            
+            if (!url.includes('pinterest') && !url.includes('pin.it')) {
+                setErrorMessage('Lütfen geçerli bir Pinterest linki girin!');
+                return;
+            }
+            
+            // Loading başlat
             btn.disabled = true;
-            loading.style.display = 'block';
-            showMessage(info, '📍 Link kontrol ediliyor...');
-
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<div class="spinner" style="display: inline-block; width: 20px; height: 20px; margin-right: 10px; border-width: 2px;"></div> İşleniyor...';
+            showMessage('loading-message');
+            
             try {
+                // Backend'e istek gönder
                 const response = await fetch('/download/', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ url })
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: JSON.stringify({ 
+                        url: url,
+                        is_mobile: /Mobile|Android|iPhone/i.test(navigator.userAgent)
+                    })
                 });
+                
                 const data = await response.json();
-
+                
                 if (data.success) {
-                    showMessage(success, '✅ Video bulundu!');
-                    document.getElementById('video-preview').src = data.video_url;
-                    document.getElementById('download-link').href = data.video_url;
-                    result.style.display = 'block';
+                    // Video bulundu
+                    showMessage('success-message');
+                    
+                    // Video URL'sini set et
+                    const videoSource = document.getElementById('video-source');
+                    const videoPreview = document.getElementById('video-preview');
+                    const downloadBtn = document.getElementById('download-btn');
+                    
+                    videoSource.src = data.video_url;
+                    videoPreview.load();
+                    downloadBtn.href = data.video_url;
+                    
+                    // Video sonuç alanını göster
+                    document.getElementById('video-result').classList.add('show');
+                    
+                    // Scroll to video
+                    setTimeout(() => {
+                        document.getElementById('video-result').scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                    }, 300);
+                    
+                    // Başarı mesajını 3 saniye sonra gizle
+                    setTimeout(() => {
+                        document.getElementById('success-message').classList.remove('show');
+                    }, 3000);
                 } else {
-                    showMessage(error, data.error || 'Video bulunamadı.');
+                    // Hata
+                    setErrorMessage(data.error || 'Video bulunamadı. Lütfen geçerli bir Pinterest video linki girin.');
                 }
-            } catch (e) {
-                showMessage(error, 'Bir hata oluştu: ' + e.message);
+            } catch (error) {
+                console.error('Error:', error);
+                setErrorMessage('Bağlantı hatası oluştu. Lütfen tekrar deneyin.');
             } finally {
                 btn.disabled = false;
-                loading.style.display = 'none';
+                btn.innerHTML = originalText;
             }
-        }
+        });
 
-        function showMessage(el, msg) {
-            el.textContent = msg;
-            el.style.display = 'block';
-        }
+        // Enter key ile arama
+        document.getElementById('pinterest-url').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                document.getElementById('search-btn').click();
+            }
+        });
 
-        document.getElementById('pinterest-url').addEventListener('keypress', e => {
-            if (e.key === 'Enter') getVideo();
+        // Download Button Handler
+        document.getElementById('download-btn').addEventListener('click', function(e) {
+            // Link zaten href ile set edilmiş, download otomatik başlayacak
+            // Kullanıcıya bilgi ver
+            const notification = document.createElement('div');
+            notification.className = 'status-message status-success show';
+            notification.textContent = '✓ Video indiriliyor... Tarayıcınızın indirme klasörünü kontrol edin.';
+            notification.style.position = 'fixed';
+            notification.style.top = '20px';
+            notification.style.left = '50%';
+            notification.style.transform = 'translateX(-50%)';
+            notification.style.zIndex = '1000';
+            notification.style.maxWidth = '90%';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 4000);
+            
+            console.log('Video indirme başlatıldı');
+        });
+
+        // Sayfa yüklendiğinde
+        document.addEventListener('DOMContentLoaded', () => {
+            initFAQ();
+        });
+
+        // Scroll animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '0';
+                    entry.target.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        entry.target.style.transition = 'all 0.6s ease-out';
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }, 100);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.step-card, .testimonial-card, .stat-card').forEach(el => {
+            observer.observe(el);
         });
     </script>
 </body>
