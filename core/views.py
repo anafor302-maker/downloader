@@ -2,8 +2,9 @@
 import requests
 import re
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, StreamingHttpResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 import json
 from urllib.parse import unquote
 import logging
@@ -145,9 +146,16 @@ def download_video(request):
                     'error': 'Geçersiz video URL\'si bulundu'
                 })
 
+            # Pin ID'yi çıkar (dosya adı için)
+            pin_id = 'video'
+            pin_match = re.search(r'/pin/(\d+)', pinterest_url)
+            if pin_match:
+                pin_id = pin_match.group(1)
+
             return JsonResponse({
                 'success': True,
-                'video_url': video_url
+                'video_url': video_url,
+                'pin_id': pin_id
             })
 
         except requests.exceptions.Timeout:
@@ -158,6 +166,74 @@ def download_video(request):
             return JsonResponse({'success': False, 'error': f'Beklenmeyen hata: {str(e)}'})
 
     return JsonResponse({'success': False, 'error': 'Geçersiz istek'})
+
+
+@require_http_methods(["GET"])
+def proxy_download(request):
+    """Videoyu proxy üzerinden indir ve kullanıcıya sun"""
+    try:
+        video_url = request.GET.get('url')
+        filename = request.GET.get('filename', 'pinterest-video.mp4')
+        
+        if not video_url:
+            return HttpResponse('Video URL gerekli', status=400)
+        
+        # Video'yu stream olarak indir
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Referer': 'https://www.pinterest.com/',
+            'Accept': '*/*',
+            'Accept-Language': 'tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7',
+            'Connection': 'keep-alive',
+        }
+        
+        logger.info(f"Video indiriliyor: {video_url}")
+        
+        # Video'yu indir (stream mode)
+        video_response = requests.get(
+            video_url, 
+            headers=headers, 
+            stream=True, 
+            timeout=30,
+            verify=True
+        )
+        
+        video_response.raise_for_status()
+        
+        # Content-Type'ı kontrol et
+        content_type = video_response.headers.get('Content-Type', 'video/mp4')
+        content_length = video_response.headers.get('Content-Length', '')
+        
+        logger.info(f"Video başarıyla alındı. Content-Type: {content_type}, Size: {content_length}")
+        
+        # StreamingHttpResponse ile videoyu sun
+        response = StreamingHttpResponse(
+            video_response.iter_content(chunk_size=8192),
+            content_type=content_type
+        )
+        
+        # İndirme için gerekli header'lar - BU ÇOK ÖNEMLİ!
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+        
+        if content_length:
+            response['Content-Length'] = content_length
+        
+        response['Accept-Ranges'] = 'bytes'
+        response['Cache-Control'] = 'no-cache'
+        
+        logger.info(f"Video kullanıcıya gönderiliyor: {filename}")
+        
+        return response
+        
+    except requests.exceptions.Timeout:
+        logger.error("Video indirme zaman aşımı")
+        return HttpResponse('Video indirme zaman aşımına uğradı', status=504)
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Video indirme hatası: {str(e)}")
+        return HttpResponse(f'Video indirme hatası: {str(e)}', status=500)
+    except Exception as e:
+        logger.error(f"Genel hata: {str(e)}")
+        return HttpResponse(f'Hata: {str(e)}', status=500)
 
 
 def find_video_in_dict(data, depth=0, max_depth=10):
