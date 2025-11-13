@@ -1,0 +1,277 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Download videos from Pinterest in MP4 format quickly and easily. Free, secure, and hassle-free. Trusted by 500K+ satisfied users.">
+    <meta name="keywords" content="Pinterest video download, Pinterest downloader, video download, MP4 download, save Pinterest video">
+    <meta name="author" content="Pinterest Video Downloader">
+    <meta name="theme-color" content="#667eea">
+    <meta property="og:title" content="📌 Pinterest Video Downloader - Free Download">
+    <meta property="og:description" content="Downloading videos from Pinterest is now very easy! Just paste the link and download.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="📌 Pinterest Video Downloader">
+    <meta name="twitter:description" content="Downloading videos from Pinterest is now very easy!">
+    
+    <!-- Hreflang Tags -->
+    <link rel="alternate" hreflang="tr" href="{{ request.scheme }}://{{ request.get_host }}/" />
+    <link rel="alternate" hreflang="en" href="{{ request.scheme }}://{{ request.get_host }}/en/" />
+    <link rel="alternate" hreflang="ar" href="{{ request.scheme }}://{{ request.get_host }}/ar/" />
+    <link rel="alternate" hreflang="x-default" href="{{ request.scheme }}://{{ request.get_host }}/" />
+    
+    <title>Pinterest Video Downloader - Free Download</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <!-- Language Switcher -->
+    <div style="position: absolute; top: 10px; right: 10px; z-index: 1000;">
+        <a href="/" style="padding: 5px 10px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 0 5px;">🇹🇷 TR</a>
+        <a href="/en/" style="padding: 5px 10px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 0 5px;">🇬🇧 EN</a>
+        <a href="/ar/" style="padding: 5px 10px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 0 5px;">🇸🇦 AR</a>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📌 Pinterest Video Downloader</h1>
+            <p>Downloading videos from Pinterest is now very easy!</p>
+        </div>
+
+        <!-- Top Ad Banner -->
+        <div class="ad-space ad-banner-top">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : '40e9dd09d54dd283b0ac4ed734668d1d',
+                    'format' : 'iframe',
+                    'height' : 90,
+                    'width' : 728,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//www.highperformanceformat.com/40e9dd09d54dd283b0ac4ed734668d1d/invoke.js"></script>
+        </div>
+
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Main Action Card -->
+                <div class="card">
+                    <div class="input-group">
+                        <label for="pinterest-url">Pinterest Video Link</label>
+                        <input type="text" id="pinterest-url" class="url-input" placeholder="https://www.pinterest.com/pin/... or https://pin.it/...">
+                        <div class="example-link">✅ Supported links:<br>
+                        • https://www.pinterest.com/pin/123456789/<br>
+                        • https://pin.it/abc123 (automatically resolved)</div>
+                    </div>
+
+                    <button class="btn btn-primary" id="search-btn">
+                        🎥 Find Video
+                    </button>
+
+                    <!-- Status Messages -->
+                    <div class="status-message status-loading" id="loading-message">
+                        <div class="spinner"></div>
+                        <div>Searching for video...</div>
+                    </div>
+                    <div class="status-message status-success" id="success-message">
+                        ✓ Video found successfully!
+                    </div>
+                    <div class="status-message status-error" id="error-message"></div>
+                    <div class="status-message status-info" id="info-message"></div>
+
+                    <!-- Video Result -->
+                    <div class="video-result" id="video-result">
+                        <video class="video-preview" id="video-preview" controls>
+                            <source id="video-source" src="" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+
+                        <!-- In-content Ad -->
+                        <div class="ad-space" style="margin: 20px 0;">
+                            <script type="text/javascript">
+                                atOptions = {
+                                    'key' : '154ecef40da418a15deb3299c42fd00e',
+                                    'format' : 'iframe',
+                                    'height' : 250,
+                                    'width' : 300,
+                                    'params' : {}
+                                };
+                            </script>
+                            <script type="text/javascript" src="//www.highperformanceformat.com/154ecef40da418a15deb3299c42fd00e/invoke.js"></script>
+                        </div>
+
+                        <a class="btn btn-success" id="download-btn" href="#" download>
+                            ⬇️ Download Video
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Stats Section -->
+                <div class="stats-section">
+                    <h2 class="section-title">📊 Quick Stats</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">500K+</div>
+                            <div class="stat-label">Happy Users</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">1M+</div>
+                            <div class="stat-label">Downloaded Videos</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">99.9%</div>
+                            <div class="stat-label">Service Quality</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">Service Hours</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Section -->
+                <div class="faq-section">
+                    <h2 class="section-title">❓ Frequently Asked Questions</h2>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>How does Pinterest video downloader work?</span>
+                            <span class="faq-icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            The Pinterest video downloader takes the link of videos shared on Pinterest and allows you to download them to your device. Just paste the video link and click the "Find Video" button.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>Which video formats do you support?</span>
+                            <span class="faq-icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Our platform supports video downloads in MP4 format. MP4 is a universal video format compatible with all devices.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>How long does the video download take?</span>
+                            <span class="faq-icon">▼</span>
+                        </div>
+                        <div class="faq-answer">
+                            Video download time depends on the video size and your internet speed. It usually completes within a few seconds.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- How-To Guide Section -->
+                <div class="howto-section">
+                    <h2 class="section-title">📖 Step-by-Step Guide</h2>
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <div class="step-number">1</div>
+                            <div class="step-icon">📌</div>
+                            <div class="step-title">Find Video on Pinterest</div>
+                            <div class="step-description">
+                                Find the video you want to download on Pinterest.
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">2</div>
+                            <div class="step-icon">🔗</div>
+                            <div class="step-title">Copy Video Link</div>
+                            <div class="step-description">
+                                Select "Share" → "Copy Link" option.
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">3</div>
+                            <div class="step-icon">📋</div>
+                            <div class="step-title">Paste Link</div>
+                            <div class="step-description">
+                                Paste the link into the field above.
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">4</div>
+                            <div class="step-icon">⬇️</div>
+                            <div class="step-title">Download Video</div>
+                            <div class="step-description">
+                                Click the "Download Video" button.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonials Section -->
+                <div class="testimonials-section">
+                    <h2 class="section-title">⭐ User Reviews</h2>
+                    <div class="testimonials-grid">
+                        <div class="testimonial-card">
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                            <p>"Very fast and secure! I definitely recommend it."</p>
+                            <strong>- John D.</strong>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                            <p>"Very easy to use and clean interface. Perfect!"</p>
+                            <strong>- Sarah M.</strong>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                            <p>"Much faster than other sites. Video quality is excellent!"</p>
+                            <strong>- Mike R.</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Ad Banner -->
+                <div class="ad-space ad-banner-bottom" style="margin-top: 40px;">
+                    <script type="text/javascript">
+                        atOptions = {
+                            'key' : '40e9dd09d54dd283b0ac4ed734668d1d',
+                            'format' : 'iframe',
+                            'height' : 90,
+                            'width' : 728,
+                            'params' : {}
+                        };
+                    </script>
+                    <script type="text/javascript" src="//www.highperformanceformat.com/40e9dd09d54dd283b0ac4ed734668d1d/invoke.js"></script>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="ad-space ad-sidebar">
+                   <script type="text/javascript">
+                        atOptions = {
+                            'key' : '154ecef40da418a15deb3299c42fd00e',
+                            'format' : 'iframe',
+                            'height' : 250,
+                            'width' : 300,
+                            'params' : {}
+                        };
+                    </script>
+                    <script type="text/javascript" src="//www.highperformanceformat.com/154ecef40da418a15deb3299c42fd00e/invoke.js"></script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-content">
+            <div style="flex: 1;">
+                <strong>© 2024 Pinterest Video Downloader</strong>
+                <p style="font-size: 12px; margin-top: 5px;">All rights reserved.</p>
+            </div>
+            <div style="flex: 1; text-align: center;">
+                <p style="font-size: 14px;">Download Pinterest videos quickly and easily.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

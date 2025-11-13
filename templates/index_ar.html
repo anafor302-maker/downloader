@@ -1,0 +1,298 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="قم بتنزيل مقاطع الفيديو من Pinterest بتنسيق MP4 بسرعة وسهولة. مجاني وآمن وسهل الاستخدام. موثوق به من قبل أكثر من 500 ألف مستخدم راضٍ.">
+    <meta name="keywords" content="تنزيل فيديو Pinterest، تنزيل Pinterest، تحميل فيديو، تنزيل MP4، حفظ فيديو Pinterest">
+    <meta name="author" content="تنزيل فيديو Pinterest">
+    <meta name="theme-color" content="#667eea">
+    <meta property="og:title" content="📌 تنزيل فيديو Pinterest - تنزيل مجاني">
+    <meta property="og:description" content="أصبح تنزيل مقاطع الفيديو من Pinterest سهلاً للغاية! فقط الصق الرابط وقم بالتنزيل.">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="📌 تنزيل فيديو Pinterest">
+    <meta name="twitter:description" content="أصبح تنزيل مقاطع الفيديو من Pinterest سهلاً للغاية!">
+    
+    <!-- Hreflang Tags -->
+    <link rel="alternate" hreflang="tr" href="{{ request.scheme }}://{{ request.get_host }}/" />
+    <link rel="alternate" hreflang="en" href="{{ request.scheme }}://{{ request.get_host }}/en/" />
+    <link rel="alternate" hreflang="ar" href="{{ request.scheme }}://{{ request.get_host }}/ar/" />
+    <link rel="alternate" hreflang="x-default" href="{{ request.scheme }}://{{ request.get_host }}/" />
+    
+    <title>تنزيل فيديو Pinterest - تنزيل مجاني</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            direction: rtl;
+            text-align: right;
+        }
+        .main-layout {
+            flex-direction: row-reverse;
+        }
+        .input-group {
+            text-align: right;
+        }
+        .example-link {
+            text-align: right;
+        }
+        .faq-question {
+            flex-direction: row-reverse;
+        }
+        .footer-content {
+            flex-direction: row-reverse;
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Switcher -->
+    <div style="position: absolute; top: 10px; left: 10px; z-index: 1000;">
+        <a href="/" style="padding: 5px 10px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 0 5px;">🇹🇷 TR</a>
+        <a href="/en/" style="padding: 5px 10px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 0 5px;">🇬🇧 EN</a>
+        <a href="/ar/" style="padding: 5px 10px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 0 5px;">🇸🇦 AR</a>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📌 تنزيل فيديو Pinterest</h1>
+            <p>أصبح تنزيل مقاطع الفيديو من Pinterest سهلاً للغاية!</p>
+        </div>
+
+        <!-- Top Ad Banner -->
+        <div class="ad-space ad-banner-top">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : '40e9dd09d54dd283b0ac4ed734668d1d',
+                    'format' : 'iframe',
+                    'height' : 90,
+                    'width' : 728,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//www.highperformanceformat.com/40e9dd09d54dd283b0ac4ed734668d1d/invoke.js"></script>
+        </div>
+
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Main Action Card -->
+                <div class="card">
+                    <div class="input-group">
+                        <label for="pinterest-url">رابط فيديو Pinterest</label>
+                        <input type="text" id="pinterest-url" class="url-input" placeholder="https://www.pinterest.com/pin/... أو https://pin.it/...">
+                        <div class="example-link">✅ الروابط المدعومة:<br>
+                        • https://www.pinterest.com/pin/123456789/<br>
+                        • https://pin.it/abc123 (يتم حلها تلقائيًا)</div>
+                    </div>
+
+                    <button class="btn btn-primary" id="search-btn">
+                        🎥 ابحث عن الفيديو
+                    </button>
+
+                    <!-- Status Messages -->
+                    <div class="status-message status-loading" id="loading-message">
+                        <div class="spinner"></div>
+                        <div>جاري البحث عن الفيديو...</div>
+                    </div>
+                    <div class="status-message status-success" id="success-message">
+                        ✓ تم العثور على الفيديو بنجاح!
+                    </div>
+                    <div class="status-message status-error" id="error-message"></div>
+                    <div class="status-message status-info" id="info-message"></div>
+
+                    <!-- Video Result -->
+                    <div class="video-result" id="video-result">
+                        <video class="video-preview" id="video-preview" controls>
+                            <source id="video-source" src="" type="video/mp4">
+                            متصفحك لا يدعم علامة الفيديو.
+                        </video>
+
+                        <!-- In-content Ad -->
+                        <div class="ad-space" style="margin: 20px 0;">
+                            <script type="text/javascript">
+                                atOptions = {
+                                    'key' : '154ecef40da418a15deb3299c42fd00e',
+                                    'format' : 'iframe',
+                                    'height' : 250,
+                                    'width' : 300,
+                                    'params' : {}
+                                };
+                            </script>
+                            <script type="text/javascript" src="//www.highperformanceformat.com/154ecef40da418a15deb3299c42fd00e/invoke.js"></script>
+                        </div>
+
+                        <a class="btn btn-success" id="download-btn" href="#" download>
+                            ⬇️ تنزيل الفيديو
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Stats Section -->
+                <div class="stats-section">
+                    <h2 class="section-title">📊 إحصائيات سريعة</h2>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">500K+</div>
+                            <div class="stat-label">مستخدم سعيد</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">1M+</div>
+                            <div class="stat-label">فيديو تم تنزيله</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">99.9%</div>
+                            <div class="stat-label">جودة الخدمة</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">ساعات الخدمة</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Section -->
+                <div class="faq-section">
+                    <h2 class="section-title">❓ الأسئلة الشائعة</h2>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span class="faq-icon">▼</span>
+                            <span>كيف يعمل تنزيل فيديو Pinterest؟</span>
+                        </div>
+                        <div class="faq-answer">
+                            يأخذ برنامج تنزيل فيديو Pinterest رابط مقاطع الفيديو المشتركة على Pinterest ويسمح لك بتنزيلها على جهازك. فقط الصق رابط الفيديو وانقر على زر "ابحث عن الفيديو".
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span class="faq-icon">▼</span>
+                            <span>ما هي تنسيقات الفيديو التي تدعمها؟</span>
+                        </div>
+                        <div class="faq-answer">
+                            تدعم منصتنا تنزيل الفيديو بتنسيق MP4. MP4 هو تنسيق فيديو عالمي متوافق مع جميع الأجهزة.
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span class="faq-icon">▼</span>
+                            <span>كم من الوقت يستغرق تنزيل الفيديو؟</span>
+                        </div>
+                        <div class="faq-answer">
+                            يعتمد وقت تنزيل الفيديو على حجم الفيديو وسرعة الإنترنت لديك. عادة ما يكتمل في غضون بضع ثوان.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- How-To Guide Section -->
+                <div class="howto-section">
+                    <h2 class="section-title">📖 دليل خطوة بخطوة</h2>
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <div class="step-number">1</div>
+                            <div class="step-icon">📌</div>
+                            <div class="step-title">ابحث عن الفيديو على Pinterest</div>
+                            <div class="step-description">
+                                ابحث عن الفيديو الذي تريد تنزيله على Pinterest.
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">2</div>
+                            <div class="step-icon">🔗</div>
+                            <div class="step-title">انسخ رابط الفيديو</div>
+                            <div class="step-description">
+                                حدد "مشاركة" ← "نسخ الرابط".
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">3</div>
+                            <div class="step-icon">📋</div>
+                            <div class="step-title">الصق الرابط</div>
+                            <div class="step-description">
+                                الصق الرابط في الحقل أعلاه.
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">4</div>
+                            <div class="step-icon">⬇️</div>
+                            <div class="step-title">تنزيل الفيديو</div>
+                            <div class="step-description">
+                                انقر على زر "تنزيل الفيديو".
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonials Section -->
+                <div class="testimonials-section">
+                    <h2 class="section-title">⭐ آراء المستخدمين</h2>
+                    <div class="testimonials-grid">
+                        <div class="testimonial-card">
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                            <p>"سريع جدًا وآمن! أوصي به بالتأكيد."</p>
+                            <strong>- أحمد م.</strong>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                            <p>"سهل الاستخدام للغاية وواجهة نظيفة. مثالي!"</p>
+                            <strong>- فاطمة س.</strong>
+                        </div>
+                        <div class="testimonial-card">
+                            <div class="stars">⭐⭐⭐⭐⭐</div>
+                            <p>"أسرع بكثير من المواقع الأخرى. جودة الفيديو ممتازة!"</p>
+                            <strong>- محمد ي.</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Ad Banner -->
+                <div class="ad-space ad-banner-bottom" style="margin-top: 40px;">
+                    <script type="text/javascript">
+                        atOptions = {
+                            'key' : '40e9dd09d54dd283b0ac4ed734668d1d',
+                            'format' : 'iframe',
+                            'height' : 90,
+                            'width' : 728,
+                            'params' : {}
+                        };
+                    </script>
+                    <script type="text/javascript" src="//www.highperformanceformat.com/40e9dd09d54dd283b0ac4ed734668d1d/invoke.js"></script>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="ad-space ad-sidebar">
+                   <script type="text/javascript">
+                        atOptions = {
+                            'key' : '154ecef40da418a15deb3299c42fd00e',
+                            'format' : 'iframe',
+                            'height' : 250,
+                            'width' : 300,
+                            'params' : {}
+                        };
+                    </script>
+                    <script type="text/javascript" src="//www.highperformanceformat.com/154ecef40da418a15deb3299c42fd00e/invoke.js"></script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-content">
+            <div style="flex: 1;">
+                <strong>© 2024 تنزيل فيديو Pinterest</strong>
+                <p style="font-size: 12px; margin-top: 5px;">جميع الحقوق محفوظة.</p>
+            </div>
+            <div style="flex: 1; text-align: center;">
+                <p style="font-size: 14px;">قم بتنزيل مقاطع فيديو Pinterest بسرعة وسهولة.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

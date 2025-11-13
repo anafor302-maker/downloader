@@ -1,3 +1,19 @@
+# robots.txt for pindownloader.site
+
 User-agent: *
 Allow: /
+Allow: /en/
+Allow: /ar/
+
+# Sitemap
 Sitemap: https://pindownloader.site/sitemap.xml
+
+# Crawl-delay (opsiyonel - sunucu yükünü azaltır)
+Crawl-delay: 1
+
+# Statik dosyalar
+Allow: /static/
+
+# Admin paneli engelle (varsa)
+Disallow: /admin/
+

@@ -1,7 +1,7 @@
 # views.py
 import requests
 import re
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse, StreamingHttpResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
@@ -12,9 +12,57 @@ import logging
 # Logger oluştur
 logger = logging.getLogger(__name__)
 
+def get_user_language_from_ip(request):
+    """Kullanıcının IP adresinden dilini tespit et"""
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    
+    try:
+        response = requests.get(f'https://ipapi.co/{ip}/json/', timeout=2)
+        data = response.json()
+        country_code = data.get('country_code', '').upper()
+        
+        # Ülke koduna göre dil belirle
+        if country_code == 'TR':
+            return 'tr'
+        elif country_code in ['SA', 'AE', 'EG', 'IQ', 'JO', 'KW', 'LB', 'LY', 'MA', 'OM', 'PS', 'QA', 'SD', 'SY', 'TN', 'YE', 'BH', 'DZ']:
+            return 'ar'
+        else:
+            return 'en'
+    except:
+        # Hata durumunda tarayıcı dilini kontrol et
+        accept_language = request.META.get('HTTP_ACCEPT_LANGUAGE', '')
+        if 'tr' in accept_language.lower():
+            return 'tr'
+        elif 'ar' in accept_language.lower():
+            return 'ar'
+        return 'en'
+
 def index(request):
-    """Ana sayfa"""
-    return render(request, 'index.html')
+    """Ana sayfa - Türkçe"""
+    # İlk ziyarette yönlendirme yap
+    if not request.session.get('language_detected'):
+        detected_lang = get_user_language_from_ip(request)
+        request.session['language_detected'] = True
+        
+        if detected_lang == 'en':
+            return redirect('/en/')
+        elif detected_lang == 'ar':
+            return redirect('/ar/')
+    
+    return render(request, 'index_tr.html')
+
+def index_en(request):
+    """İngilizce sayfa"""
+    return render(request, 'index_en.html')
+
+def index_ar(request):
+    """Arapça sayfa"""
+    return render(request, 'index_ar.html')
+
 
 @csrf_exempt
 def download_video(request):
