@@ -553,3 +553,82 @@ body {
         text-align: center;
     }
 }
+
+
+/* ============================== */
+/*     ARABIC RTL RESPONSIVE FIX   */
+/* ============================== */
+
+html[lang="ar"] body {
+    direction: rtl !important;
+    text-align: right !important;
+}
+
+/* Ana layout RTL */
+html[lang="ar"] .main-layout {
+    display: flex;
+    flex-direction: row-reverse !important;
+}
+
+/* Mobilde stacked görünüm */
+@media (max-width: 768px) {
+    html[lang="ar"] .main-layout {
+        flex-direction: column !important;
+    }
+
+    html[lang="ar"] .sidebar {
+        width: 100% !important;
+        margin-top: 20px;
+    }
+
+    html[lang="ar"] .ad-sidebar iframe {
+        max-width: 100% !important;
+        height: auto;
+    }
+}
+
+/* Input, label, example text */
+html[lang="ar"] .input-group,
+html[lang="ar"] .example-link {
+    text-align: right !important;
+}
+
+/* FAQ RTL */
+html[lang="ar"] .faq-question {
+    display: flex;
+    flex-direction: row-reverse !important;
+    justify-content: flex-start !important;
+}
+
+/* Kartlar RTL uyumlu */
+html[lang="ar"] .step-card,
+html[lang="ar"] .stat-card,
+html[lang="ar"] .testimonial-card {
+    text-align: right !important;
+}
+
+/* Stats grid RTL fix */
+@media (max-width: 600px) {
+    html[lang="ar"] .stats-grid {
+        grid-template-columns: 1fr 1fr !important;
+    }
+}
+
+/* Footer RTL düzen */
+html[lang="ar"] .footer-content {
+    display: flex;
+    flex-direction: row-reverse !important;
+    text-align: right !important;
+}
+
+/* Video alanı responsive */
+html[lang="ar"] .video-preview {
+    width: 100% !important;
+    height: auto !important;
+}
+
+/* Butonlar RTL uyumlu */
+html[lang="ar"] .btn {
+    text-align: center !important;
+    direction: rtl !important;
+}

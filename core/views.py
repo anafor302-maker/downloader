@@ -41,6 +41,11 @@ def get_user_language_from_ip(request):
             return 'ar'
         return 'en'
 
+
+def blog_ucretsiz(request):
+    return render(request, 'blog_ucretsiz.html')
+
+
 def index(request):
     """Ana sayfa - Türkçe"""
     # İlk ziyarette yönlendirme yap

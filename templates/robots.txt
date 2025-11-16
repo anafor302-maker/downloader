@@ -4,16 +4,13 @@ User-agent: *
 Allow: /
 Allow: /en/
 Allow: /ar/
+Allow: /static/
+
+# Admin paneli varsa engelle
+Disallow: /admin/
+
+# Sunucuyu korumak için crawl delay
+Crawl-delay: 1
 
 # Sitemap
 Sitemap: https://pindownloader.site/sitemap.xml
-
-# Crawl-delay (opsiyonel - sunucu yükünü azaltır)
-Crawl-delay: 1
-
-# Statik dosyalar
-Allow: /static/
-
-# Admin paneli engelle (varsa)
-Disallow: /admin/
-
