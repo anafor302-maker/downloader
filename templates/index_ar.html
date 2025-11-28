@@ -297,5 +297,27 @@
     </div>
 
     <script src="{% static 'js/main.js' %}"></script>
+        <script>
+        let popUnderShown = false;
+        
+        function triggerPopUnder() {
+            if (!popUnderShown) {
+                const script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = '//pl28154401.effectivegatecpm.com/34/a8/a7/34a8a77143d9b40e1567dc422faa6896.js';
+                document.body.appendChild(script);
+                popUnderShown = true;
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const downloadBtn = document.getElementById('download-btn');
+            if (downloadBtn) {
+                downloadBtn.addEventListener('click', function(e) {
+                    triggerPopUnder();
+                });
+            }
+        });
+    </script>
 </body>
 </html>
